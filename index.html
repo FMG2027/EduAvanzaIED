@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa Mental del Manual</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{--bg:#f6f3ec;--panel:#fffdf8;--fg:#25221d;--mut:#6b655a;--line:#cfc8b8;--c0:#3b3a36;--c1:#a4532b;--c2:#1f6f78;--c3:#6a4c93;--c4:#4a7a2a;--hit:#f2c744;--warn:#b3261e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a17;--panel:#24221e;--fg:#ece7dc;--mut:#a39c8d;--line:#4a463d;--c0:#d8d2c4;--c1:#e8946a;--c2:#5cc0cb;--c3:#b99be0;--c4:#8fcb6a;--hit:#b8921a;--warn:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1a17;--panel:#24221e;--fg:#ece7dc;--mut:#a39c8d;--line:#4a463d;--c0:#d8d2c4;--c1:#e8946a;--c2:#5cc0cb;--c3:#b99be0;--c4:#8fcb6a;--hit:#b8921a;--warn:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.35 "Source Sans 3",system-ui,sans-serif;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+header{max-width:1100px;margin:0 auto 12px}
+h1{font:600 clamp(24px,4vw,34px)/1.1 Fraunces,Georgia,serif;margin:0 0 4px;text-wrap:balance}
+header p{margin:0;color:var(--mut);max-width:70ch}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px auto;max-width:1100px}
+.bar input{flex:1 1 200px;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:inherit}
+button{font:inherit;padding:7px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);cursor:pointer}
+button:hover{border-color:var(--fg)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--mut);max-width:1100px;margin:0 auto 10px}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cnt{font-size:13px;color:var(--mut)}
+#vp{height:min(72vh,760px);overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);cursor:grab;-webkit-overflow-scrolling:touch}
+#vp.drag{cursor:grabbing;user-select:none}
+#sz{position:relative}
+#cv{position:absolute;left:0;top:0;transform-origin:0 0}
+svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+svg path{fill:none;stroke-width:1.6;opacity:.55}
+.n{position:absolute;padding:6px 10px;border-radius:9px;border:1px solid color-mix(in srgb,var(--cc) 45%,var(--line));border-left:4px solid var(--cc);background:color-mix(in srgb,var(--cc) 8%,var(--panel));font-size:13.5px;cursor:default}
+.n.has{cursor:pointer}
+.n.d0{width:210px;font:600 18px/1.15 Fraunces,Georgia,serif;background:var(--c0);color:var(--bg);border-color:var(--c0)}
+.n.d1{width:230px;font:600 15.5px/1.2 Fraunces,Georgia,serif;background:var(--cc);color:var(--bg);border-color:var(--cc)}
+.n.d2{width:230px;font-weight:600}
+.n.g{width:190px;font-weight:600;border-style:dashed;color:var(--cc)}
+.n.r{width:360px;font-size:13px}
+.n:not(.d0):not(.d1):not(.g):not(.r):not(.d2){width:250px}
+.b{display:inline-block;font-size:11px;font-weight:600;padding:0 6px;border-radius:5px;background:var(--cc);color:var(--bg);margin-right:6px;vertical-align:1px}
+.fx{display:block;margin-top:3px;font-size:11.5px;color:var(--warn)}
+.tg{float:right;margin-left:8px;font-size:11px;opacity:.8}
+.n.hit{outline:3px solid var(--hit)}
+footer{max-width:1100px;margin:12px auto 0;font-size:13px;color:var(--mut)}
+</style>
+</head>
+<body>
+
+<header><h1>Mapa mental del Manual</h1>
+<p>Introducción al Estudio del Derecho · Recurso de repaso para el examen final.</p></header>
+<div class="bar"><input id="q" type="search" placeholder="Buscar concepto (ej. veto, Merlin, equidad)"><button id="ex">Expandir todo</button><button id="co">Contraer</button><button id="zo">−</button><button id="zi">+</button></div>
+<div class="leg"><span><i style="background:var(--c1)"></i>Cap. 1</span><span><i style="background:var(--c2)"></i>Cap. 2</span><span><i style="background:var(--c3)"></i>Cap. 3</span><span><i style="background:var(--c4)"></i>Cap. 4</span><span>Toca un nodo para abrir o cerrar · arrastra para mover</span></div>
+<div id="vp"><div id="sz"><div id="cv"><svg id="sv"></svg></div></div></div>
+
+<script>
+const R=(c,t)=>({p:1,t});
+const G=(...k)=>({g:1,t:'Puntos clave',c:k});
+const DATA={t:'Introducción al Estudio del Derecho',k:0,c:[
+{t:'Cap. 1 · La norma jurídica y el sistema normativo',k:1,c:[
+ {t:'1.1 Concepto, función y finalidad',c:[
+  {t:'Derecho: conjunto ordenado de normas (el organismo)',c:[{t:'Norma: regla específica que prescribe dar, hacer o no hacer (la célula)'}]},
+  {t:'Funciones',c:[{t:'Ordenar y encauzar lo social (sustituye la autodefensa)'},{t:'Limitar y organizar el poder del Estado'},{t:'Dar certeza y seguridad jurídica'}]},
+  {t:'Finalidad: tríada de orden social, seguridad jurídica y justicia',c:[{t:'Justicia: «dar a cada quien lo suyo» (Ulpiano, suum cuique tribuere)'}]},
+  G(R('M1-1','Definición de derecho: conjunto de normas jurídicas que regulan la conducta humana en sociedad.'),R('M1-2','Derecho y norma: el derecho es un conjunto de normas y la norma es una regla específica.'),R('M1-3','Finalidad principal del derecho: garantizar el orden social, la justicia y la convivencia pacífica.'))]},
+ {t:'1.2 Ser y deber ser',c:[
+  {t:'Juicios enunciativos (el «ser»)',c:[{t:'Leyes de la naturaleza: verdaderos o falsos'},{t:'No admiten excepciones voluntarias'}]},
+  {t:'Juicios normativos (el «deber ser»)',c:[{t:'Dirigidos a seres libres: válidos o inválidos'},{t:'Validez formal (competencia y procedimiento) y material (valores justos)'},{t:'La validez no depende del cumplimiento efectivo'}]},
+  G(R('M1-30','Norma creada con el procedimiento debido y en vigor, pero que casi nadie cumple: válida y vigente, pero ineficaz.'))]},
+ {t:'1.3 Derecho vs. moral: 4 antitéticas',c:[
+  {t:'Bilateralidad (derecho) vs. unilateralidad (moral)',c:[{t:'Norma imperativo-atributiva: deber para uno, facultad para otro'}]},
+  {t:'Exterioridad vs. interioridad'},{t:'Coercibilidad vs. incoercibilidad',c:[{t:'Posibilidad legítima de usar la fuerza pública del Estado'}]},
+  {t:'Heteronomía vs. autonomía'},
+  G(R('M1-4','Norma moral: es interior, se basa en la conciencia y su sanción es el remordimiento.'),R('M1-5','Bilateralidad: la norma impone un deber y atribuye a otro una facultad correlativa.'),R('M1-6','Exterioridad del Derecho: la adecuación visible de la conducta a la norma.'),R('M1-7','Coercibilidad: posibilidad de hacer efectivo el cumplimiento mediante la fuerza pública.'),R('M1-8','Heteronomía: la norma proviene de una voluntad externa al sujeto obligado.'))]},
+ {t:'1.4 Clasificación de las normas (García Máynez)',c:[
+  {t:'11 criterios',c:[{t:'Sistema, fuente, ámbito espacial, temporal, material y personal'},{t:'Jerarquía, sanciones, cualidad, complementación y relación con la voluntad'}]},
+  {t:'Sanciones: leges perfectae, plus quam perfectae, minus quam perfectae, imperfectae'},{t:'Normas taxativas (orden público) y dispositivas (interpretativas y supletorias)'},
+  G(R('M1-16','Tríada operativa del sistema normativo: permitido, prohibido y obligatorio.'),R('M1-17','Clasificación por fuente: legisladas, consuetudinarias y jurisprudenciales.'),R('M1-18','Norma vigente hasta que sea derogada: ámbito temporal indeterminado.'),R('M1-21','Sentencia que resuelve un caso concreto: norma individualizada.'),R('M1-22','Leges plus quam perfectae: anulan el acto y además imponen una sanción.'),R('M1-23','Norma que autoriza una conducta: permisiva o positiva.'),R('M1-24','Norma obligatoria e irrenunciable: taxativa.'))]},
+ {t:'1.5 Convencionalismos sociales',c:[{t:'Etiqueta, cortesía, moda y protocolo'},{t:'Comparten con el derecho: carácter social, exterioridad y validez heterónoma'},{t:'Se distinguen por ser unilaterales: nadie puede exigirlos'},
+  G(R('M1-9','Convencionalismo social: una regla de etiqueta.'))]},
+ {t:'1.6 Justicia y equidad',c:[
+  {t:'Distributiva (Aristóteles): a cada quien según mérito y necesidad'},{t:'Conmutativa: equivalencia en tratos y contratos'},{t:'Retributiva: proporción entre falta y pena'},{t:'Social: protección tutelar a sectores vulnerables'},
+  G(R('M1-10','Justicia distributiva: la distribución justa de bienes y recursos, concepto heredado de Aristóteles.'),R('M1-11','Justicia retributiva: exige proporción entre la conducta y la respuesta (falta y pena). La conmutativa exige equivalencia en tratos y contratos.'),R('M1-12','Justicia social: busca compensar desigualdades económicas y sociales.'),R('M1-27','Equidad: adaptar la ley a las circunstancias específicas para lograr justicia.'))]},
+ {t:'1.7 Corrientes del pensamiento jurídico',c:[
+  {t:'Iusnaturalismo: principios universales e inmutables; ley injusta no es derecho'},{t:'Positivismo: solo es derecho el creado por el Estado con el procedimiento formal'},
+  {t:'Contrato social: el Estado nace de un pacto'},
+  G(R('M1-13','Iusnaturalismo: existen principios superiores de justicia.'),R('M1-14','Crítica al derecho natural: no hay consenso universal sobre lo que es «natural».'),R('M1-15','Positivismo jurídico: el derecho es válido si proviene de autoridad competente mediante el procedimiento correcto, con independencia de su contenido moral.'),R('M1-19','Contrato social: el Estado surge de un pacto voluntario entre individuos libres para garantizar orden, seguridad y protección de derechos.'))]},
+ {t:'1.8 Constitución de 1917 y derecho social',c:[{t:'Antecedente del constitucionalismo social'},{t:'Derechos del trabajo y de la tierra → Derecho laboral y agrario'},
+  G(R('M1-11b','La Constitución de 1917 fue de las primeras del mundo en incorporar derechos sociales.'),R('M1-20','El Derecho Laboral pertenece al derecho social.'))]},
+ {t:'1.9 Jerarquía normativa (Art. 133)',c:[
+  {t:'Pirámide de Kelsen: validez formal y material',c:[{t:'Cada norma vale por su conformidad con la superior'}]},
+  {t:'1.º Constitución y tratados de derechos humanos (rango constitucional; prevalece la restricción expresa)'},
+  {t:'2.º Otros tratados, sobre leyes generales, federales y locales'},{t:'3.º Reglamentos: del Ejecutivo y, en el municipio, del Ayuntamiento',c:[{t:'Reserva de ley y subordinación jerárquica'}]},
+  {t:'4.º Base: sentencias, contratos, testamentos y resoluciones'},
+  G(R('M1-25','En la cúspide de la jerarquía normativa: la Constitución y los tratados internacionales en materia de derechos humanos.'),R('M1-26','Los reglamentos tienen como función proveer a la exacta observancia de las leyes.'))]},
+ {t:'1.10 Ética profesional del abogado',c:[
+  {t:'Lealtad procesal'},{t:'Verdad ante los tribunales'},{t:'Secreto profesional'},{t:'Independencia y libertad de defensa'},{t:'Probidad y desinterés'},{t:'Compromiso con la justicia social: defensa pro bono'},
+  G(R('M1-28','Ética jurídica: principios morales que deben guiar a los juristas en su actuación profesional, judicial y social.'),R('M1-29','Obligación ética del abogado: guardar el secreto profesional.'))]}
+]},
+{t:'Cap. 2 · Acepciones, fuentes y disciplinas auxiliares',k:2,c:[
+ {t:'2.1 Acepciones de «Derecho»',c:[{t:'Objetivo: normas escritas'},{t:'Subjetivo: facultad de hacer, no hacer o exigir'},{t:'Vigente: declarado obligatorio por la autoridad'},{t:'Positivo: el que realmente se cumple'},{t:'Natural: principios ideales de justicia'},
+  G(R('M2-1','Derecho objetivo: conjunto de normas, leyes y preceptos escritos del sistema jurídico.'),R('M2-2','Derecho subjetivo: facultad que la norma concede para hacer, no hacer o exigir algo.'),R('M2-3','Derecho positivo: el que realmente se cumple y se aplica, con independencia de su vigencia formal.'),R('M2-4','Derecho natural: principios ideales de justicia universales que valen por sí mismos.'))]},
+ {t:'2.2 Matriz de 7 sectores (García Máynez)',c:[
+  {t:'Tres dimensiones: vigencia (validez formal), justicia (validez material) y eficacia (positividad)'},
+  {t:'Sectores',c:[{t:'1 Letra muerta: vigente, injusto, ineficaz'},{t:'2 Vigente y justo, sin eficacia'},{t:'3 Justicia sin vigencia ni eficacia'},{t:'4 Vigente y eficaz, pero injusto'},{t:'5 Ideal: vigente, justo y eficaz'},{t:'6 Costumbre equitativa: eficaz y justa, sin vigencia'},{t:'7 Práctica eficaz, injusta y sin vigencia'}]},
+  G(R('M2-5','Validez formal (vigencia): norma creada o reconocida por el Estado por sus cauces oficiales.'),R('M2-6','Sector 5: derecho formalmente válido, intrínsecamente justo y positivo.'),R('M2-7','Letra muerta (sector 1): formalmente válido, sin justicia y sin positividad.'),R('M2-8','Sector 3: principios de justicia y derecho natural sin vigencia formal ni positividad.'),R('M2-9','Usos comunitarios equitativos no codificados: sector 6 (sin vigencia, con justicia y eficacia).'))]},
+ {t:'2.3 Fuentes del derecho',c:[
+  {t:'Metáfora: el manantial de donde brota la ley'},
+  {t:'Formales: legislación, costumbre, jurisprudencia y normas individualizadas'},{t:'Reales o materiales: necesidades sociales, económicas y tecnológicas'},{t:'Históricas: documentos del pasado (Derecho romano, Constitución de 1857)'},
+  G(R('M2-10','Metáfora de García Máynez: la fuente es el manantial de donde brota la ley hacia la vida social.'),R('M2-11','Fuentes formales: los procesos oficiales de creación de las normas jurídicas.'),R('M2-12','Fuente histórica: el Derecho romano.'),R('M2-13','Problemas, necesidades y cambios sociales que obligan a legislar: fuentes reales o materiales.'))]},
+ {t:'2.4 Proceso legislativo federal (6 etapas)',c:[
+  {t:'1 Iniciativa (Art. 71)',c:[{t:'Presidente (hasta 2 preferentes por periodo), legisladores, Legislaturas locales y ciudadanos'}]},
+  {t:'2 Discusión: Cámara de origen y Cámara revisora',c:[{t:'Empréstitos, contribuciones, impuestos y reclutamiento: primero Diputados (Art. 72, H)'}]},
+  {t:'3 Aprobación por ambas Cámaras'},
+  {t:'4 Sanción (Art. 72)',c:[{t:'Observaciones del Ejecutivo: 30 días naturales; si no, se reputa aprobado'},{t:'Después, 10 días naturales para promulgar y publicar'},{t:'Veto superado por 2/3 de cada Cámara: es ley'}]},
+  {t:'5 Publicación en el DOF'},
+  {t:'6 Iniciación de la vigencia',c:[{t:'Sincrónico: la ley fija la fecha en sus transitorios'},{t:'Sucesivo (CCF Art. 3): 3 días + 1 por cada 40 km'},{t:'Vacatio legis: lapso entre publicación y vigencia'}]},
+  G(R('M2-14','Sistema sucesivo: vigencia 3 días después de la publicación, más un día por cada 40 km.'),R('M2-15','Orden: iniciativa, discusión, aprobación, sanción, publicación e iniciación de la vigencia.'),R('M2-16','Iniciativa ciudadana: al menos el 0.13 % de la lista nominal de electores.'),R('M2-17','Empréstitos, contribuciones, impuestos o reclutamiento de tropas: se discuten primero en Diputados.'),R('M2-18','Veto: el Presidente devuelve el proyecto con observaciones dentro de 30 días naturales.'),R('M2-19','Veto confirmado por 2/3 en ambas Cámaras: el Ejecutivo debe promulgar y publicar; ya es ley.'),R('M2-20','Vacatio legis: lapso entre la publicación en el DOF y la entrada en vigor.'))]},
+ {t:'2.5 Jurisprudencia y costumbre',c:[
+  {t:'SCJN: 9 integrantes, solo en Pleno',c:[{t:'Precedente obligatorio con 6 votos'}]},
+  {t:'Reiteración: Tribunales Colegiados'},{t:'Contradicción de criterios: SCJN o Plenos Regionales'},
+  {t:'Costumbre jurídica: elemento objetivo y subjetivo',c:[{t:'No va contra la ley; es delegada; prohibida en materia penal'}]},
+  G(R('M2-21','Precedentes obligatorios de la SCJN: mayoría de al menos 6 votos del Pleno.'),R('M2-22','Reiteración (5 sentencias no interrumpidas, por unanimidad): Tribunales Colegiados de Circuito.'),R('M2-23','Contradicción de criterios: órganos que sostienen tesis discrepantes sobre un mismo punto de derecho.'),R('M2-24','Costumbre jurídica: elemento objetivo (inveterata consuetudo) y subjetivo (opinio juris) a la vez.'),R('M2-25','En materia penal la costumbre no puede crear delitos ni imponer penas.'))]},
+ {t:'2.6 Áreas del derecho',c:[
+  {t:'Público: subordinación e imperio',c:[{t:'Constitucional, administrativo, penal, procesal, fiscal e internacional público'}]},
+  {t:'Privado: coordinación e igualdad',c:[{t:'Civil, mercantil e internacional privado'}]},
+  {t:'Social: protección a grupos vulnerables',c:[{t:'Trabajo, agrario, seguridad social, económico y ambiental'}]},
+  G(R('M2-26','Derecho público: relaciones de subordinación e imperio entre el Estado y los particulares.'),R('M2-27','Derecho agrario: rama del derecho social.'),R('M2-28','Derecho internacional privado: qué ley o tribunal aplica cuando hay elementos de distintos países.'))]},
+ {t:'2.7 Disciplinas auxiliares',c:[{t:'Historia del Derecho'},{t:'Sociología jurídica'},{t:'Derecho comparado'},{t:'Economía jurídica'},
+  G(R('M2-29','Sociología jurídica: causas sociales de las leyes y su eficacia práctica.'),R('M2-30','Derecho comparado: estudia instituciones o sistemas de distintos países o épocas para hallar semejanzas y diferencias.'))]}
+]},
+{t:'Cap. 3 · Conceptos jurídicos fundamentales',k:3,c:[
+ {t:'3.1 Supuestos jurídicos',c:[{t:'Supuesto (hipótesis en la ley) vs. hecho real; coincidencia = encuadramiento'},{t:'Simple: un solo hecho (cumplir 18 años)'},{t:'Complejo: dos o más hechos',c:[{t:'Dependientes: deben concurrir juntos'},{t:'Independientes: cada hecho produce efectos'}]},
+  G(R('M3-1','El «si» o hipótesis abstracta de la norma se llama supuesto jurídico.'),R('M3-2','El supuesto condiciona que los derechos y obligaciones nazcan, se modifiquen, se transmitan o se extingan.'),R('M3-3','Hecho concreto que coincide con la hipótesis de la ley: encuadramiento o tipicidad.'),R('M3-4','Supuesto simple: cumplir 18 años genera capacidad de ejercicio.'),R('M3-5','Supuestos complejos dependientes: efectos solo si concurren todos los hechos a la vez.'))]},
+ {t:'3.2 Ley de causalidad jurídica',c:[{t:'«No hay consecuencia de derecho sin supuesto jurídico»'},{t:'Enlace necesario: supuesto → consecuencia'},{t:'Enlace contingente: consecuencia → cumplimiento'},
+  G(R('M3-6','«No hay consecuencia de derecho sin supuesto jurídico»: Ley de Causalidad Jurídica de García Máynez.'),R('M3-7','Enlace necesario: al coincidir el hecho con la hipótesis, la consecuencia nace inevitablemente.'),R('M3-8','Enlace contingente: depende de la voluntad del obligado, que puede cumplir o negarse.'),R('M3-9','Al firmar el arrendamiento nace automáticamente la obligación de pagar renta: enlace necesario.'))]},
+ {t:'3.3 Hechos y actos jurídicos',c:[
+  {t:'Doctrina francesa: la voluntad',c:[{t:'Acto jurídico: voluntad de producir efectos'},{t:'Hecho jurídico: naturales o humanos involuntarios o ilícitos'}]},
+  {t:'Carnelutti: conformidad con la ley',c:[{t:'Acto en sentido estricto: voluntario y lícito'},{t:'Acto ilícito: voluntario y contrario a la ley; hay sanción'}]},
+  G(R('M3-10','Doctrina francesa: acto y hecho se distinguen por la voluntad de producir efectos jurídicos.'),R('M3-11','Acontecimiento al que la ley atribuye consecuencias aunque nadie las quiso: hecho jurídico.'),R('M3-12','Compraventa, testamento y matrimonio: actos jurídicos.'),R('M3-13','Carnelutti clasifica los actos según cumplan o contravengan el mandato de la ley.'),R('M3-14','Acto en sentido estricto: voluntario, lícito y conforme a lo ordenado por el Derecho.'),R('M3-15','Acto ilícito: voluntario, con fin práctico opuesto a la ley; el ordenamiento responde con sanción.'),R('M3-16','Un delito es hecho humano ilícito (doctrina francesa) y acto ilícito (Carnelutti).'))]},
+ {t:'3.4 Relación jurídica',c:[{t:'Vínculo tutelado por el Estado'},{t:'Elementos: sujeto activo, sujeto pasivo y objeto'},{t:'Objeto: dar, hacer o no hacer'},{t:'Derecho subjetivo (facultas agendi) ↔ deber jurídico'},
+  G(R('M3-17','Relación jurídica: vínculo tutelado por el Estado que nace al realizarse un supuesto jurídico.'),R('M3-18','Elementos: sujeto activo, sujeto pasivo y objeto.'),R('M3-19','Sujeto activo: acreedor o titular, que puede exigir.'),R('M3-20','Objeto: la prestación de dar, hacer o no hacer.'),R('M3-21','Facultas agendi: poder que la ley da al titular para actuar, abstenerse o exigir.'),R('M3-22','Deber jurídico: exigencia de la ley que obliga al sujeto pasivo en favor del titular.'))]},
+ {t:'3.5 Cuatro axiomas ontológico-jurídicos',c:[{t:'Inclusión: lo ordenado está permitido'},{t:'Libertad: lo no prohibido ni ordenado está permitido'},{t:'Contradicción: nada puede estar prohibido y permitido a la vez'},{t:'Exclusión del medio: toda conducta está permitida o prohibida'},
+  G(R('M3-23','Axioma de inclusión: todo lo ordenado está permitido.'),R('M3-24','Lo que no se prohíbe ni ordena (pintar tu casa de azul) está permitido: axioma de libertad.'),R('M3-25','Axioma de contradicción: una conducta no puede estar prohibida y permitida a la vez.'),R('M3-26','Axioma de exclusión del medio: toda conducta está permitida o prohibida, sin tercera opción.'))]},
+ {t:'3.6 Persona física y moral',c:[
+  {t:'Persona: centro de imputación de derechos y deberes'},{t:'Física: del nacimiento a la muerte; concebido protegido',c:[{t:'Atributos: capacidad, nombre, domicilio, estado civil, nacionalidad y patrimonio'}]},
+  {t:'Moral: personalidad propia',c:[{t:'Públicas: Nación, Estados, Municipios y organismos descentralizados'},{t:'Privadas: sociedades, asociaciones, sindicatos y fundaciones'},{t:'Actúa por representantes'}]},
+  G(R('M3-27','Persona: centro de imputación de derechos y deberes.'),R('M3-28','Estado civil: atributo de la personalidad de la persona física.'),R('M3-29','Un municipio: ejemplo de persona moral pública.'),R('M3-30','Persona moral: personalidad independiente de sus socios y actuación mediante representantes.'))]}
+]},
+{t:'Cap. 4 · Técnica jurídica, interpretación y aplicación',k:4,c:[
+ {t:'4.1 Técnica jurídica y sus 5 problemas',c:[{t:'Legislativa: redactar leyes · De aplicación: resolver casos'},{t:'Problemas: interpretación, integración, vigencia, leyes en el tiempo y en el espacio'},
+  G(R('M4-1','Técnica de aplicación: aplicar el Derecho objetivo vigente a los casos singulares.'),R('M4-2','Técnica legislativa: formular y redactar leyes escritas, generales, abstractas y coherentes.'),R('M4-3','Texto ambiguo u oscuro: problema de interpretación.'),R('M4-4','«Silogismo probatorio» no es uno de los cinco problemas de la técnica jurídica.'))]},
+ {t:'4.2 Silogismo judicial',c:[{t:'Premisa mayor: la norma general'},{t:'Premisa menor: el hecho probado (subsunción)'},{t:'Conclusión: la sentencia, norma individualizada'},
+  G(R('M4-5','Premisa mayor: la norma genérica, hipotética y abstracta, tal como está en la ley.'),R('M4-6','Premisa menor: juicio probatorio de que el supuesto se realizó en el mundo real.'),R('M4-7','Conclusión: la sentencia, es decir, la norma individualizada.'))]},
+ {t:'4.3 Escuelas hermenéuticas',c:[{t:'Exégesis: la ley lo prevé todo; el juez, boca de la ley'},{t:'Histórica: espíritu del pueblo; interpretación evolutiva'},{t:'Libre investigación científica: ley incompleta; fuentes objetivas'},{t:'Derecho libre: el juez puede crear la norma justa'},
+  G(R('M4-8','Exégesis: nació con la codificación napoleónica y exige culto a la letra de la ley.'),R('M4-9','«El juez es la boca que pronuncia las palabras de la ley»: Exégesis.'),R('M4-10','Escuela Histórica: el Derecho es manifestación viva del espíritu del pueblo, interpretada de forma evolutiva.'),R('M4-11','Libre investigación científica: la ley es obra humana, incompleta e insuficiente.'),R('M4-12','Ante una laguna: costumbre, principios jurídicos y naturaleza de las cosas.'),R('M4-13','Derecho Libre: la escuela que da más libertad al juzgador para apartarse del texto.'))]},
+ {t:'4.4 Lagunas e integración',c:[{t:'Laguna: falta norma expresa · Plenitud hermética: el sistema siempre responde'},{t:'El juez nunca puede negarse a sentenciar'},{t:'Métodos: analogía, principios generales del derecho y equidad'},
+  G(R('M4-14','Plenitud hermética: aunque la ley tenga lagunas, el sistema ofrece métodos para resolver cualquier controversia.'),R('M4-15','Laguna: en el texto de las leyes no hay norma expresa que prevea el caso.'),R('M4-16','Analogía: ubi eadem ratio, idem jus (misma razón, misma solución).'),R('M4-17','Principio general del derecho: pacta sunt servanda.'),R('M4-18','Equidad: adaptar la regla general al caso concreto y evitar un rigorismo injusto.'))]},
+ {t:'4.5 Artículo 14 constitucional',c:[
+  {t:'Párr. 1: irretroactividad en perjuicio'},{t:'Párr. 2: audiencia y debido proceso',c:[{t:'Notificación, pruebas, alegatos y resolución'}]},{t:'Párr. 3: exacta aplicación penal; sin analogía'},{t:'Párr. 4: orden civil: letra, interpretación y principios generales'},
+  G(R('M4-19','Párrafo 1 del Art. 14: conflictos de leyes en el tiempo (irretroactividad).'),R('M4-20','El Art. 14 prohíbe la retroactividad en perjuicio de persona alguna.'),R('M4-21','Párrafo 2: audiencia y debido proceso (tribunales previamente establecidos).'),R('M4-22','Párrafo 3: si la conducta no está tipificada exactamente en ley previa, se absuelve.'),R('M4-23','Párrafo 4: sentencia civil conforme a la letra o interpretación de la ley y, a falta de ella, principios generales.'),R('M4-24','Penal: integración prohibida; civil: el juez siempre debe resolver.'))]},
+ {t:'4.6 Leyes en el tiempo',c:[{t:'Merlin: derechos adquiridos, facultades y expectativas'},{t:'Bonnecase: situaciones abstractas y concretas'},{t:'Ejemplo: mayoría de edad de 18 a 21 años'},
+  G(R('M4-25','Derecho adquirido: ya ingresó al patrimonio y la ley nueva no puede quitarlo.'),R('M4-26','Heredar de una persona que vive: expectativa de derecho.'),R('M4-27','Situación jurídica concreta (Bonnecase): ya activada por un hecho; la ley nueva no puede modificarla.'))]},
+ {t:'4.7 Leyes en el espacio',c:[{t:'Territorialidad absoluta vs. extraterritorialidad'},{t:'Estatutos: personal, real (lex rei sitae) y formal (locus regit actum)',c:[{t:'Personal: estado y capacidad (en el CCF, según el domicilio)'}]},
+  G(R('M4-28','Teoría de los estatutos: resuelve conflictos de leyes en el espacio.'),R('M4-29','Estatuto real (lex rei sitae): los bienes se rigen por la ley del lugar donde se encuentran.'),R('M4-30','Forma del acto según la ley del lugar de celebración: locus regit actum (estatuto formal).'))]}
+]}
+]};
+
+const cv=document.getElementById('cv'),sv=document.getElementById('sv'),vp=document.getElementById('vp'),sz=document.getElementById('sz');
+let id=0,all=[],scale=innerWidth<700?.7:.9,showR=false;
+function prep(n,d,col,p){n.id=id++;n.d=d;n.p=p;if(d===1)col=n.k;n.col=col;n.open=d<2;all.push(n);(n.c||[]).forEach(c=>prep(c,d+1,col,n))}
+prep(DATA,0,0,null);
+
+function cls(n){return n.p?'r':n.g?'g':'d'+Math.min(n.d,3)}
+function vis(n,a){a.push(n);if(n.open&&n.c)n.c.forEach(c=>vis(c,a));return a}
+function render(){
+ cv.querySelectorAll('.n').forEach(e=>e.remove());sv.innerHTML='';
+ const v=vis(DATA,[]);
+ v.forEach(n=>{const e=document.createElement('div');e.className='n '+cls(n)+(n.c?' has':'')+(n.hit?' hit':'');e.style.setProperty('--cc','var(--c'+n.col+')');
+  let h='';h+=n.t;
+  if(n.c)h='<span class="tg">'+(n.open?'◀':'▶ '+n.c.length)+'</span>'+h;
+  e.innerHTML=h;e.onclick=()=>{if(n.c){n.open=!n.open;render()}};cv.appendChild(e);n.e=e;n.w=e.offsetWidth;n.h=e.offsetHeight});
+ const gap=8,gx=56;
+ (function sh(n){const k=n.open&&n.c?n.c:[];k.forEach(sh);n.sh=k.length?Math.max(n.h,k.reduce((s,c)=>s+c.sh,0)+gap*(k.length-1)):n.h})(DATA);
+ let mx=0,my=0;
+ (function pl(n,top,x){n.x=x;const k=n.open&&n.c?n.c:[];
+  if(k.length){const tot=k.reduce((s,c)=>s+c.sh,0)+gap*(k.length-1);let cur=top+Math.max(0,(n.sh-tot)/2);k.forEach(c=>{pl(c,cur,x+n.w+gx);cur+=c.sh+gap});n.cy=(k[0].cy+k[k.length-1].cy)/2}else n.cy=top+n.sh/2;
+  n.y=n.cy-n.h/2;n.e.style.left=n.x+'px';n.e.style.top=n.y+'px';mx=Math.max(mx,n.x+n.w);my=Math.max(my,n.y+n.h)})(DATA,10,10);
+ let p='';v.forEach(n=>{if(n.open&&n.c)n.c.forEach(c=>{const x1=n.x+n.w,y1=n.cy,x2=c.x,y2=c.cy,m=(x1+x2)/2;p+='<path d="M'+x1+','+y1+'C'+m+','+y1+' '+m+','+y2+' '+x2+','+y2+'" style="stroke:var(--c'+c.col+')"/>'});});
+ sv.innerHTML=p;const W=mx+20,H=my+20;sv.setAttribute('width',W);sv.setAttribute('height',H);
+ cv.style.width=W+'px';cv.style.height=H+'px';cv.style.transform='scale('+scale+')';sz.style.width=W*scale+'px';sz.style.height=H*scale+'px';
+
+}
+const setAll=(o,gOnly)=>{all.forEach(n=>{if(n.c){if(gOnly){if(n.g)n.open=o}else n.open=o}});};
+document.getElementById('ex').onclick=()=>{setAll(true);render()};
+document.getElementById('co').onclick=()=>{all.forEach(n=>{if(n.c)n.open=n.d<2});render()};
+document.getElementById('zi').onclick=()=>{scale=Math.min(1.5,scale+.1);render()};
+document.getElementById('zo').onclick=()=>{scale=Math.max(.3,scale-.1);render()};
+const nz=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+document.getElementById('q').oninput=function(){const q=nz(this.value.trim());all.forEach(n=>n.hit=false);
+ if(q.length>1){let first=null;all.forEach(n=>{if(nz(n.t).includes(q)){n.hit=true;for(let a=n.p;a;a=a.p)a.open=true;if(!first)first=n}});render();
+  if(first){vp.scrollTo({left:Math.max(0,first.x*scale-40),top:Math.max(0,first.cy*scale-vp.clientHeight/2),behavior:'smooth'})}}else render()};
+let dr=null;vp.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button===0)dr={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop,m:0}});
+addEventListener('pointermove',e=>{if(!dr)return;const dx=e.clientX-dr.x,dy=e.clientY-dr.y;if(Math.abs(dx)+Math.abs(dy)>4){dr.m=1;vp.classList.add('drag')}if(dr.m){vp.scrollLeft=dr.l-dx;vp.scrollTop=dr.t-dy}});
+addEventListener('pointerup',()=>{dr=null;vp.classList.remove('drag')});
+render();vp.scrollTop=Math.max(0,DATA.cy*scale-vp.clientHeight/2);
+</script>
+
+</body>
+</html>
